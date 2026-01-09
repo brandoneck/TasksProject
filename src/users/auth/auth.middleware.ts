@@ -5,11 +5,12 @@ import { Request, Response } from 'express';
 export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: () => void) {
 
-    CONST { authorization } = req.headers;
+    const { authorization } = req.headers;
     if (!authorization) {
       throw new HttpException('Unauthorized', HttpStatus.UNAUTHORIZED);
-      // res.status(401).json({ message: 'Unauthorized' });
-      return;
+    }
+    if (authorization !== 'Bearer mysecrettoken') {
+      throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     }
     next();
   }
